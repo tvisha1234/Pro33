@@ -7,6 +7,11 @@ var engine, world;
 var ground;
 var divisionHeight = 300;
 var plinko;
+var particle;
+
+var count;
+var score = 0;
+var gameState = "play";
 
 var particles = [];
 var plinkos = [];
@@ -42,9 +47,9 @@ function setup() {
   }
 
   //particles
-  if(frameCount % 60 === 0) {
+  /*if(frameCount % 60 === 0) {
     particles.push(new Particle(random(width/2-10, width/2+10), 10, 10))
-  }
+  }*/
   //plinko = new Plinko(70,500,40);
 
   Engine.run(engine);
@@ -54,6 +59,10 @@ function draw() {
   background("black");  
 
   Engine.update(engine);
+  
+  fill("white");
+  textSize(20);
+  text("Score: "+score, 20,20);
 
   ground.display();
 
@@ -73,10 +82,38 @@ function draw() {
   }
 
   //particles
-  for(var k = 0; k < particles.length; k++) {
+  /*for(var k = 0; k < particles.length; k++) {
     particles[k].display();
-  }
+  }*/
 
-  //plinko.display();
+  mousePressed();
+
+}
+
+function mousePressed() {
+  //console.log("Tvisha");
+  if(gameState !== "end") {
+    count++
+    particle = new Particle(mouseX, 20, 20);
+
+    if(particle !== null) {
+
+      particle.display();
   
+      if(particle.body.position.y > 760) {
+  
+        if(particle.body.position.x < 300) {
+  
+          score = score + 200;
+          particle = null;
+          if(count >= 5) { gameState = "end"}
+        }
+    
+      }
+    }
+  }
+  if(gameState === "end") {
+    textSize(50);
+    text("Game Over", 100, 230);
+  }
 }
